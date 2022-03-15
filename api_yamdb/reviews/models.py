@@ -53,7 +53,7 @@ class Review(models.Model):
 class Title(models.Model):
     pass
 
-    name = models.CharField('титул', max_length=100)    
+    name = models.CharField('титул', max_length=100)
     year = models.IntegerField('год')
     category = models.ForeignKey(
         Category,
@@ -62,18 +62,19 @@ class Title(models.Model):
         null=True,
         related_name='titles',
     )
-    genre = models.ForeignKey(
+    genre = models.ForeignKey(  # ManyToMany?
         Genre,
         on_delete=models.SET_NULL,
         blank=True,
         null=True,
+        related_name='titles',
     )
     description = models.TextField(
         'описание',
         max_length=256,
         null=True,
         blank=True,
-        )
+    )
 
     def __str__(self):
         return f'{self.name}'
