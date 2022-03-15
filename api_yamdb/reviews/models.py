@@ -11,12 +11,26 @@ class User(AbstractUser):
     # bio =
     # first_name =
     # last_name =
-    
+
 
 class Category(models.Model):
     pass
-    # name =
-    # slug =
+
+    name = models.CharField('категория', max_length=256)
+    slug = models.SlugField('слаг категории', unique=True)
+
+    def __str__(self):
+        return f'{self.name} {self.slug}'
+
+
+class Genre(models.Model):
+    pass
+
+    name = models.CharField('жанр', max_length=100)
+    slug = models.SlugField('слаг жанра', unique=True)
+
+    def __str__(self):
+        return f'{self.name} {self.slug}'
 
 
 class Comment(models.Model):
@@ -25,12 +39,6 @@ class Comment(models.Model):
     # text =
     # author =
     # pub_date =
-
-
-class Genre(models.Model):
-    pass
-    # name =
-    # slug =
 
 
 class Review(models.Model):
@@ -44,7 +52,28 @@ class Review(models.Model):
 
 class Title(models.Model):
     pass
-    # name =
-    # year =
-    # category =
-    # genre = ?
+
+    name = models.CharField('титул', max_length=100)    
+    year = models.IntegerField('год')
+    category = models.ForeignKey(
+        Category,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        related_name='titles',
+    )
+    genre = models.ForeignKey(
+        Genre,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+    )
+    description = models.TextField(
+        'описание',
+        max_length=256,
+        null=True,
+        blank=True,
+        )
+
+    def __str__(self):
+        return f'{self.name}'
