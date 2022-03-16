@@ -32,14 +32,6 @@ class Genre(models.Model):
         return f'{self.name} {self.slug}'
 
 
-class Comment(models.Model):
-    pass
-    # review_id, title_id, comment_id
-    # text =
-    # author =
-    # pub_date =
-
-
 class Title(models.Model):
     name = models.CharField('титул', max_length=100)
     year = models.IntegerField('год')
@@ -98,3 +90,37 @@ class Review(models.Model):
         'Дата отзыва',
         auto_now_add=True,
     )
+
+
+class Comment(models.Model):
+    title = models.ForeignKey(
+        Title,
+        on_delete=models.CASCADE,
+        related_name='comments',
+        verbose_name='Произведение'
+    )
+    review = models.ForeignKey(
+        Review,
+        on_delete=models.CASCADE,
+        related_name='comments',
+        verbose_name='Отзыв'
+    )
+    author = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='comments',
+        verbose_name='Автор'
+    )
+    text_comment = models.TextField(
+        'Комментарий',
+        help_text='Введите коментарий на отзыв'
+    )
+    com_pub_date = models.DateTimeField(
+        'Дата комментария',
+        auto_now_add=True,
+    )
+    constraints = [
+        models.UniqueConstraint(
+            fields=['title', 'review'],
+            name='unique_review_for_title')
+    ]
