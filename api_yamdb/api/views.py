@@ -3,50 +3,43 @@ from django.shortcuts import get_object_or_404
 from rest_framework import viewsets
 from reviews.models import Category, Comment, Genre, Review, Title, User
 
-#from .serializers import
+from .mixins import CreateListDestroyViewSet
+from .serializers import (CategorySerializer, CommentSerializer,
+                          GenreSerializer, ReviewSerializer, TitleSerializer,
+                          UserSerializer)
 
 
 class UserViewSet(viewsets.ModelViewSet):
-    pass
-
     queryset = User.objects.all()
-    # serializer_class =
+    serializer_class = UserSerializer
     # permission_classes = Admin
 
-class CategoryViewSet(viewsets.ModelViewSet):
-    pass
 
+class CategoryViewSet(CreateListDestroyViewSet):
     queryset = Category.objects.all()
-    # serializer_class =
-    # permission_classes = Admin
+    serializer_class = CategorySerializer
+    # permission_classes = AdminOrRead
 
 
-class GenreViewSet(viewsets.ModelViewSet):
-    pass
-
+class GenreViewSet(CreateListDestroyViewSet):
     queryset = Genre.objects.all()
-    # serializer_class =
+    serializer_class = GenreSerializer
     # permission_classes = Admin
+
 
 class CommentViewSet(viewsets.ModelViewSet):
-    pass
-
     queryset = Comment.objects.all()
-    # serializer_class =
+    serializer_class = CommentSerializer
     # permission_classes = Auth
 
 
 class ReviewViewSet(viewsets.ModelViewSet):
-    pass
-
     queryset = Review.objects.all()
-    # serializer_class =
+    serializer_class = ReviewSerializer
     # permission_classes = Auth
 
 
 class TitleViewSet(viewsets.ModelViewSet):
-    pass
-
     queryset = Title.objects.all()
-    # serializer_class =
+    serializer_class = TitleSerializer
     # permission_classes = Admin
