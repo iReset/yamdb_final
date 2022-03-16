@@ -1,3 +1,4 @@
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
@@ -39,15 +40,6 @@ class Comment(models.Model):
     # pub_date =
 
 
-class Review(models.Model):
-    pass
-    # title_id
-    # text =
-    # score =
-    # author =
-    # pub_date =
-
-
 class Title(models.Model):
     name = models.CharField('титул', max_length=100)
     year = models.IntegerField('год')
@@ -74,3 +66,35 @@ class Title(models.Model):
 
     def __str__(self):
         return f'{self.name}'
+
+
+class Review(models.Model):
+    title = models.ForeignKey(
+        Title,
+        on_delete=models.CASCADE,
+        related_name='reviews',
+        verbose_name='Произведение'
+    )
+    author = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='reviews',
+        verbose_name='Автор'
+    )
+    text = models.TextField(
+        'Отзыв',
+        help_text='Введите отзыв на произведение'
+    )
+    score = models.IntegerField(
+        'Оценка',
+        help_text='Поставьте оценку',
+        default=1,
+        validators=[
+            MaxValueValidator(10),
+            MinValueValidator(1)
+        ]
+    )
+    rev_pub_date = models.DateTimeField(
+        'Дата отзыва',
+        auto_now_add=True,
+    )
