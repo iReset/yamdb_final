@@ -1,19 +1,36 @@
 from django.core.validators import MinValueValidator, MaxValueValidator
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, UserManager
+from django.conf import settings
 from django.db import models
 
 
+CHOICES = (
+    ('user', 'Пользователь'),
+    ('moderator', 'Модератор'),
+    ('admin', 'Администратор'),
+)
+
+
+class CustomUserManager(UserManager):
+    pass
+
+
 class User(AbstractUser):
-    # Изменить setting -> AUTH_USER_MODEL = 'reviews.User'
-    # username =
-    # email =
-    # role =
-    bio = models.TextField(
-        'Биография',
-        blank=True,
-    )
-    # first_name =
-    # last_name =
+    username = models.CharField('username', max_length=150, unique=True)
+    email = models.EmailField('email', max_length=254, unique=True)
+    first_name = models.CharField('Имя', max_length=150, blank=True)
+    last_name = models.CharField('Фамилия', max_length=150, blank=True)
+    role = models.CharField('Роль', max_length=16, choices=CHOICES)
+    bio = models.TextField('Биография', blank=True)
+
+    objects = CustomUserManager()
+
+    USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = []
+
+    class Meta:
+        verbose_name = 'user'
+        verbose_name_plural = 'users'
 
 
 class Category(models.Model):
@@ -68,7 +85,7 @@ class Review(models.Model):
         verbose_name='Произведение'
     )
     author = models.ForeignKey(
-        User,
+        settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name='reviews',
         verbose_name='Автор'
@@ -106,7 +123,7 @@ class Comment(models.Model):
         verbose_name='Отзыв'
     )
     author = models.ForeignKey(
-        User,
+        settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name='comments',
         verbose_name='Автор'
