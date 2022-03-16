@@ -3,19 +3,19 @@ from django.db import models
 
 
 class User(AbstractUser):
-    pass
     # Изменить setting -> AUTH_USER_MODEL = 'reviews.User'
     # username =
     # email =
     # role =
-    # bio =
+    bio = models.TextField(
+        'Биография',
+        blank=True,
+    )
     # first_name =
     # last_name =
 
 
 class Category(models.Model):
-    pass
-
     name = models.CharField('категория', max_length=256)
     slug = models.SlugField('слаг категории', unique=True)
 
@@ -24,8 +24,6 @@ class Category(models.Model):
 
 
 class Genre(models.Model):
-    pass
-
     name = models.CharField('жанр', max_length=100)
     slug = models.SlugField('слаг жанра', unique=True)
 
@@ -51,8 +49,6 @@ class Review(models.Model):
 
 
 class Title(models.Model):
-    pass
-
     name = models.CharField('титул', max_length=100)
     year = models.IntegerField('год')
     category = models.ForeignKey(
