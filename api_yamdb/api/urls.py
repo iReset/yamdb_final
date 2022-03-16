@@ -1,5 +1,10 @@
 from django.urls import include, path
 from rest_framework import routers
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+    TokenVerifyView,
+)
 
 from .views import (UserViewSet, CategoryViewSet, GenreViewSet,
                     CommentViewSet, ReviewViewSet, TitleViewSet)
@@ -20,4 +25,7 @@ router_v1.register('users/me', UserViewSet)
 
 urlpatterns = [
     path('v1/', include(router_v1.urls)),
+    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('token/verify/', TokenVerifyView.as_view(), name='token_verify'),
 ]
