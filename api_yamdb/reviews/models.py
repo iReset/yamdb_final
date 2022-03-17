@@ -1,6 +1,5 @@
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.contrib.auth.models import AbstractUser
-from django.conf import settings
 from django.db import models
 
 
@@ -112,6 +111,14 @@ class Review(models.Model):
         auto_now_add=True,
     )
 
+    class Meta:
+        ordering = ('-rev_pub_date',)
+        verbose_name = 'Отзыв'
+        verbose_name_plural = 'Отзывы'
+
+    def __str__(self):
+        return self.text[:15]
+
 
 class Comment(models.Model):
     review = models.ForeignKey(
@@ -124,7 +131,7 @@ class Comment(models.Model):
         User,
         on_delete=models.CASCADE,
         related_name='comments',
-        verbose_name='Автор'
+        verbose_name='Автор комментария'
     )
     text_comment = models.TextField(
         'Комментарий',
@@ -139,3 +146,11 @@ class Comment(models.Model):
             fields=['title', 'review'],
             name='unique_review_for_title')
     ]
+
+    class Meta:
+        ordering = ('-com_pub_date',)
+        verbose_name = 'Комментарий'
+        verbose_name_plural = 'Комментарии'
+
+    def __str__(self):
+        return self.text[:15]
