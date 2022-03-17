@@ -1,8 +1,19 @@
 # from django.shortcuts import get_object_or_404
+from api_yamdb.settings import DEFAULT_FROM_EMAIL
+
 from django.db.models import Avg
+from django.contrib.auth.tokens import default_token_generator
+from django.core.mail import send_mail
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters, viewsets
+from django.shortcuts import get_object_or_404
+
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework import filters, viewsets, mixins, permissions, status
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
+from rest_framework.response import Response
+from rest_framework_simplejwt.tokens import AccessToken
+
+
 # from .permissions import AdminOrReadOnly
 from reviews.models import Category, Comment, Genre, Review, Title, User
 
@@ -10,7 +21,55 @@ from .filters import TitleFilter
 from .mixins import CreateListDestroyViewSet
 from .serializers import (CategorySerializer, CommentSerializer,
                           GenreSerializer, GetTitleSerializer,
-                          ReviewSerializer, TitleSerializer, UserSerializer)
+                          ReviewSerializer, TitleSerializer, UserSerializer,
+                          SingupSerializer, TokenSerializer)
+
+
+@api_view(['POST'])
+@permission_classes([permissions.AllowAny])
+def send_confirm_code(request):
+    serializer = SingupSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    username = serializer.validated_data.get('username')
+    email = serializer.validated_data.get('email')
+    if (not User.objects.filter(username=username).exists()
+       and not User.objects.filter(email=email).exists()):
+        User.objects.create(
+            username=username, email=email
+        )
+    user = User.objects.filter(username=username).first()
+    confirm_code = default_token_generator.make_token(user)
+    send_mail(
+        'Код подтверждения регистрации на Yamdb',
+        f'Код подтверждения: {confirm_code}',
+        DEFAULT_FROM_EMAIL,
+        [email]
+    )
+    return Response(
+        {'result': 'Код подтверждения успешно отправлен!'},
+        status=status.HTTP_200_OK
+    )
+
+
+@api_view(['POST'])
+@permission_classes([permissions.AllowAny])
+def send_jwt_token(request):
+    serializer = TokenSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    username = serializer.validated_data.get('username')
+    confirm_code = serializer.validated_data.get(
+        'confirm_code'
+    )
+    user = get_object_or_404(User, username=username)
+    if default_token_generator.check_token(user, confirm_code):
+        token = AccessToken.for_user(user)
+        return Response(
+            {'token': str(token)}, status=status.HTTP_200_OK
+        )
+    return Response(
+        {'confirm_code': 'Неверный код подтверждения!'},
+        status=status.HTTP_400_BAD_REQUEST
+    )
 
 
 class UserViewSet(viewsets.ModelViewSet):
