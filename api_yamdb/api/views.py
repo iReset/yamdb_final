@@ -19,6 +19,7 @@ from reviews.models import Category, Comment, Genre, Review, Title, User
 
 from .filters import TitleFilter
 from .mixins import CreateListDestroyViewSet
+from .permissions import Admin, AdminOrReadOnly, AuthorModeratorAdminOrReadOnly
 from .serializers import (CategorySerializer, CommentSerializer,
                           GenreSerializer, GetTitleSerializer,
                           ReviewSerializer, TitleSerializer, UserSerializer,
@@ -101,9 +102,17 @@ class CommentViewSet(viewsets.ModelViewSet):
 
 
 class ReviewViewSet(viewsets.ModelViewSet):
-    queryset = Review.objects.all()
     serializer_class = ReviewSerializer
-    # permission_classes = Auth
+    permission_classes = [AuthorModeratorAdminOrReadOnly,
+                          permissions.IsAuthenticatedOrReadOnly]
+
+    def get_queryset(self):
+        title = get_object_or_404(Title, id=self.kwargs['title_id'])
+        return title.reviews.all()
+
+    def perform_create(self, serializer):
+        title = get_object_or_404(Title, id=self.kwargs['title_id'])
+        serializer.save(author=self.request.user, title=title)
 
 
 class TitleViewSet(viewsets.ModelViewSet):
