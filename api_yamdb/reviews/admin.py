@@ -43,7 +43,7 @@ class ReviewAdmin(admin.ModelAdmin):
 
 class TitleAdmin(admin.ModelAdmin):
     list_display = (
-        'name', 'year', 'category', 'genre', 'description'
+        'name', 'year', 'category', 'description'
     )
     search_fields = ('name', 'year', 'category', 'genre')
     list_filter = ('name', 'year', 'category', 'genre')
