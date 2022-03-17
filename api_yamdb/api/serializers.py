@@ -10,9 +10,13 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
+    author = serializers.SlugRelatedField(
+        read_only=True, slug_field='username'
+    )
+
     class Meta:
         model = Comment
-        fields = '__all__'
+        fields = ('id', 'text', 'author', 'pub_date')
 
 
 class GenreSerializer(serializers.ModelSerializer):
@@ -22,10 +26,13 @@ class GenreSerializer(serializers.ModelSerializer):
 
 
 class ReviewSerializer(serializers.ModelSerializer):
+    author = serializers.SlugRelatedField(
+        read_only=True, slug_field='username'
+    )
+
     class Meta:
         model = Review
-        fields = '__all__'
-        read_only_fields = ('title',)
+        fields = ('id', 'text', 'author', 'score', 'rev_pub_date')
 
 
 class TitleSerializer(serializers.ModelSerializer):
@@ -65,3 +72,12 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = '__all__'
+
+
+class SingupSerializer(serializers.Serializer):
+    email = serializers.EmailField(required=True)
+
+
+class TokenSerializer(serializers.Serializer):
+    email = serializers.EmailField(required=True)
+    confirm_code = serializers.CharField(required=True)
