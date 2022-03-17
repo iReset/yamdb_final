@@ -8,13 +8,13 @@ from django_filters.rest_framework import DjangoFilterBackend
 from django.shortcuts import get_object_or_404
 
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework import filters, viewsets, mixins, permissions, status
+from rest_framework import filters, viewsets, permissions, status
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import AccessToken
 
 
-# from .permissions import AdminOrReadOnly
+from .permissions import AdminOrReadOnly
 from reviews.models import Category, Comment, Genre, Review, Title, User
 
 from .filters import TitleFilter
@@ -83,7 +83,7 @@ class CategoryViewSet(CreateListDestroyViewSet):
     serializer_class = CategorySerializer
     filter_backends = (filters.SearchFilter,)
     search_fields = ('name',)
-    # permission_classes = (AdminOrReadOnly,)
+    permission_classes = (AdminOrReadOnly,)
 
 
 class GenreViewSet(CreateListDestroyViewSet):
@@ -91,19 +91,19 @@ class GenreViewSet(CreateListDestroyViewSet):
     serializer_class = GenreSerializer
     filter_backends = (filters.SearchFilter,)
     search_fields = ('name',)
-    # permission_classes = (AdminOrReadOnly,)
+    permission_classes = (AdminOrReadOnly,)
 
 
 class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
-    # permission_classes = Auth
+    # permission_classes = (AuthorModeratorAdminOrReadOnly,)
 
 
 class ReviewViewSet(viewsets.ModelViewSet):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
-    # permission_classes = Auth
+    # permission_classes = (AuthorModeratorAdminOrReadOnly,)
 
 
 class TitleViewSet(viewsets.ModelViewSet):
@@ -113,7 +113,7 @@ class TitleViewSet(viewsets.ModelViewSet):
     serializer_class = TitleSerializer
     filter_backends = (DjangoFilterBackend,)
     filterset_class = TitleFilter
-    # permission_classes = (AdminOrReadOnly,)
+    permission_classes = (AdminOrReadOnly,)
 
     def get_serializer_class(self):
         if self.request.method == 'GET':
