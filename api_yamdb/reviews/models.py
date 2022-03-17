@@ -1,36 +1,43 @@
 from django.core.validators import MinValueValidator, MaxValueValidator
-from django.contrib.auth.models import AbstractUser, UserManager
+from django.contrib.auth.models import AbstractUser
 from django.conf import settings
 from django.db import models
 
 
-CHOICES = (
-    ('user', 'Пользователь'),
-    ('moderator', 'Модератор'),
-    ('admin', 'Администратор'),
-)
-
-
-class CustomUserManager(UserManager):
-    pass
-
-
 class User(AbstractUser):
+    USER = 'user'
+    ADMIN = 'admin'
+    MODERATOR = 'moderator'
+    USER_ROLE = [
+        (USER, 'user'),
+        (MODERATOR, 'moderator'),
+        (ADMIN, 'admin'),
+    ]
+
     username = models.CharField('username', max_length=150, unique=True)
     email = models.EmailField('email', max_length=254, unique=True)
     first_name = models.CharField('Имя', max_length=150, blank=True)
     last_name = models.CharField('Фамилия', max_length=150, blank=True)
-    role = models.CharField('Роль', max_length=16, choices=CHOICES)
+    role = models.CharField('Роль', max_length=16,
+                            choices=USER_ROLE, default=USER)
     bio = models.TextField('Биография', blank=True)
 
-    objects = CustomUserManager()
+    @property
+    def is_user(self):
+        return self.role == self.USER
 
-    USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = []
+    @property
+    def is_moderator(self):
+        return self.role == self.MODERATOR
+
+    @property
+    def is_admin(self):
+        return self.role == self.ADMIN or self.is_staff
 
     class Meta:
-        verbose_name = 'user'
-        verbose_name_plural = 'users'
+        ordering = ('username',)
+        verbose_name = 'Пользователь'
+        verbose_name_plural = 'Пользователи'
 
 
 class Category(models.Model):
@@ -78,23 +85,23 @@ class Review(models.Model):
     title = models.ForeignKey(
         Title,
         on_delete=models.CASCADE,
+        null=True,
         related_name='reviews',
         verbose_name='Произведение'
     )
     author = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
+        User,
         on_delete=models.CASCADE,
         related_name='reviews',
-        verbose_name='Автор'
+        verbose_name='Автор отзыва'
     )
     text = models.TextField(
-        'Отзыв',
+        'Текст отзыва',
         help_text='Введите отзыв на произведение'
     )
     score = models.IntegerField(
         'Оценка',
         help_text='Поставьте оценку',
-        default=1,
         validators=[
             MaxValueValidator(10),
             MinValueValidator(1)
@@ -114,14 +121,14 @@ class Comment(models.Model):
         verbose_name='Отзыв'
     )
     author = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
+        User,
         on_delete=models.CASCADE,
         related_name='comments',
         verbose_name='Автор'
     )
     text_comment = models.TextField(
         'Комментарий',
-        help_text='Введите коментарий на отзыв'
+        help_text='Введите коментарий на отзыв',
     )
     com_pub_date = models.DateTimeField(
         'Дата комментария',
