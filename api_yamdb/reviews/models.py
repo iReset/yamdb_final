@@ -84,6 +84,7 @@ class Review(models.Model):
     title = models.ForeignKey(
         Title,
         on_delete=models.CASCADE,
+        # FIXME: а как без него???
         null=True,
         related_name='reviews',
         verbose_name='Произведение'

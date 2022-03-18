@@ -33,6 +33,8 @@ def send_confirm_code(request):
     serializer.is_valid(raise_exception=True)
     username = serializer.validated_data.get('username')
     email = serializer.validated_data.get('email')
+    # FIXME: получается, что может быть несколько пользователей с одной почтой
+    # и один пользователь с несколькими почтами. Что-то не то
     if (not User.objects.filter(username=username).exists()
        and not User.objects.filter(email=email).exists()):
         User.objects.create(
@@ -76,6 +78,9 @@ def send_jwt_token(request):
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    # FIXME: что-то тут не так. либо проверка идет по И, и тогда
+    # IsAuthenticated лишний, либо проверка идет по ИЛИ, и тогда IsAdminUser
+    # лишний.
     permission_classes = (IsAuthenticated, IsAdminUser)
 
 

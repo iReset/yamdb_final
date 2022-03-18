@@ -1,3 +1,4 @@
+# FIXME: перенести каталог management на уровень выше, в проект
 from django.core.management.base import BaseCommand
 import csv
 from django.conf import settings
@@ -21,11 +22,15 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         for model, csv_files in Models.items():
             with open(
+                # FIXME: использовать STATICFILES_DIRS
+                # FIXME: получить переменную через getattr(settings...)
                 f'{settings.BASE_DIR}/static/data/{csv_files}',
                 'r',
                 encoding='utf-8'
             ) as csv_file:
                 reader = csv.DictReader(csv_file)
+                # TODO: очищать базу перед добавлением
+                # TODO: делать запрос пользователю на очистку
                 model.objects.bulk_create(
                     model(**data) for data in reader
                 )

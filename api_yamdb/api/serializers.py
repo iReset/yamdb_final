@@ -26,6 +26,7 @@ class GenreSerializer(serializers.ModelSerializer):
 
 
 class ReviewSerializer(serializers.ModelSerializer):
+    # TODO: добавить проверку на неизменяемость произведения
     author = serializers.SlugRelatedField(
         read_only=True, slug_field='username'
     )
