@@ -104,8 +104,7 @@ class GenreViewSet(CreateListDestroyViewSet):
 class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
-    permission_classes = [AuthorModeratorAdminOrReadOnly,
-                          permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [AuthorModeratorAdminOrReadOnly]
 
     def get_queryset(self):
         review = get_object_or_404(
@@ -124,8 +123,7 @@ class CommentViewSet(viewsets.ModelViewSet):
 
 class ReviewViewSet(viewsets.ModelViewSet):
     serializer_class = ReviewSerializer
-    permission_classes = [AuthorModeratorAdminOrReadOnly,
-                          permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [AuthorModeratorAdminOrReadOnly]
 
     def get_queryset(self):
         title = get_object_or_404(Title, id=self.kwargs['title_id'])
