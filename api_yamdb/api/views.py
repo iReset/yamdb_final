@@ -1,5 +1,5 @@
 # from django.shortcuts import get_object_or_404
-from api_yamdb.settings import DEFAULT_FROM_EMAIL
+from django.conf import settings
 
 from django.db.models import Avg
 from django.contrib.auth.tokens import default_token_generator
@@ -9,7 +9,6 @@ from django.shortcuts import get_object_or_404
 
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework import filters, viewsets, permissions, status
-from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import AccessToken
 
@@ -35,8 +34,8 @@ def send_confirm_code(request):
     email = serializer.validated_data.get('email')
     # FIXME: получается, что может быть несколько пользователей с одной почтой
     # и один пользователь с несколькими почтами. Что-то не то
-    if (not User.objects.filter(username=username).exists()
-       and not User.objects.filter(email=email).exists()):
+    if not (User.objects.filter(username=username).exists()
+       and User.objects.filter(email=email).exists()):
         User.objects.create(
             username=username, email=email
         )
@@ -45,7 +44,7 @@ def send_confirm_code(request):
     send_mail(
         'Код подтверждения регистрации на Yamdb',
         f'Код подтверждения: {confirm_code}',
-        DEFAULT_FROM_EMAIL,
+        settings.DEFAULT_FROM_EMAIL,
         [email]
     )
     return Response(
@@ -81,7 +80,7 @@ class UserViewSet(viewsets.ModelViewSet):
     # FIXME: что-то тут не так. либо проверка идет по И, и тогда
     # IsAuthenticated лишний, либо проверка идет по ИЛИ, и тогда IsAdminUser
     # лишний.
-    permission_classes = (IsAuthenticated, IsAdminUser)
+    permission_classes = [Admin]
 
 
 class CategoryViewSet(CreateListDestroyViewSet):
@@ -103,7 +102,22 @@ class GenreViewSet(CreateListDestroyViewSet):
 class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
-    # permission_classes = (AuthorModeratorAdminOrReadOnly,)
+    permission_classes = [AuthorModeratorAdminOrReadOnly,
+                          permissions.IsAuthenticatedOrReadOnly]
+
+    def get_queryset(self):
+        review = get_object_or_404(
+            Review, id=self.kwargs['review_id'],
+            title__id=self.kwargs['title_id']
+        )
+        return review.comments.all()
+
+    def perform_create(self, serializer):
+        review = get_object_or_404(
+            Review, id=self.kwargs['review_id'],
+            title__id=self.kwargs['title_id']
+        )
+        serializer.save(author=self.request.user, review=review)
 
 
 class ReviewViewSet(viewsets.ModelViewSet):
