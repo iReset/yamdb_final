@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.validators import UniqueValidator
 
 from reviews.models import Category, Comment, Genre, Review, Title, User
 
@@ -81,13 +82,45 @@ class GetTitleSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(
+        validators=[
+            UniqueValidator(queryset=User.objects.all())
+        ],
+        required=True,
+    )
+    email = serializers.EmailField(
+        validators=[
+            UniqueValidator(queryset=User.objects.all())
+        ]
+    )
+
     class Meta:
         model = User
-        fields = '__all__'
+        fields = ("username", "email", "first_name", "last_name",
+                  "role", "bio")
 
 
 class SingupSerializer(serializers.Serializer):
-    email = serializers.EmailField(required=True)
+    username = serializers.CharField(
+        validators=[
+            UniqueValidator(queryset=User.objects.all())
+        ]
+    )
+    email = serializers.EmailField(
+        validators=[
+            UniqueValidator(queryset=User.objects.all())
+        ]
+    )
+
+    def validate_username(self, value):
+        if value.lower() == "me":
+            raise serializers.ValidationError(
+                "Использовать имя 'me' в качестве username запрещено")
+        return value
+
+    class Meta:
+        fields = ("username", "email")
+        model = User
 
 
 class TokenSerializer(serializers.Serializer):

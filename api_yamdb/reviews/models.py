@@ -1,6 +1,7 @@
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from datetime import datetime
 
 
 class User(AbstractUser):
@@ -57,7 +58,13 @@ class Genre(models.Model):
 
 class Title(models.Model):
     name = models.CharField('титул', max_length=100)
-    year = models.IntegerField('год')
+    year = models.PositiveSmallIntegerField(
+        validators=[
+            MinValueValidator(1),
+            MaxValueValidator(datetime.now().year)
+        ],
+        verbose_name='Год'
+    )
     category = models.ForeignKey(
         Category,
         on_delete=models.SET_NULL,
@@ -116,6 +123,12 @@ class Review(models.Model):
         ordering = ('-rev_pub_date',)
         verbose_name = 'Отзыв'
         verbose_name_plural = 'Отзывы'
+        constraints = [
+            models.UniqueConstraint(
+                fields=['title', 'author'],
+                name='unique_review'
+            ),
+        ]
 
     def __str__(self):
         return self.text[:15]
