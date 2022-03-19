@@ -31,8 +31,8 @@ from .serializers import (CategorySerializer, CommentSerializer,
 def send_confirm_code(request):
     serializer = SingupSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
-    username = serializer.validated_data.get('username')
-    email = serializer.validated_data.get('email')
+    username = serializer.validated_data['username']
+    email = serializer.validated_data['email']
     # FIXME: получается, что может быть несколько пользователей с одной почтой
     # и один пользователь с несколькими почтами. Что-то не то
     if not (User.objects.filter(username=username).exists()
@@ -49,7 +49,7 @@ def send_confirm_code(request):
         [email]
     )
     return Response(
-        {'result': 'Код подтверждения успешно отправлен!'},
+        serializer.data,
         status=status.HTTP_200_OK
     )
 
@@ -59,10 +59,8 @@ def send_confirm_code(request):
 def send_jwt_token(request):
     serializer = TokenSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
-    username = serializer.validated_data.get('username')
-    confirm_code = serializer.validated_data.get(
-        'confirm_code'
-    )
+    username = serializer.validated_data['username']
+    confirm_code = serializer.validated_data['confirm_code']
     user = get_object_or_404(User, username=username)
     if default_token_generator.check_token(user, confirm_code):
         token = AccessToken.for_user(user)
@@ -70,7 +68,7 @@ def send_jwt_token(request):
             {'token': str(token)}, status=status.HTTP_200_OK
         )
     return Response(
-        {'confirm_code': 'Неверный код подтверждения!'},
+        serializer.errors,
         status=status.HTTP_400_BAD_REQUEST
     )
 
@@ -161,8 +159,7 @@ class ReviewViewSet(viewsets.ModelViewSet):
 
 class TitleViewSet(viewsets.ModelViewSet):
     queryset = Title.objects.annotate(
-        Avg('reviews__score')
-    )
+        Avg('reviews__score'))
     serializer_class = TitleSerializer
     filter_backends = (DjangoFilterBackend,)
     filterset_class = TitleFilter
