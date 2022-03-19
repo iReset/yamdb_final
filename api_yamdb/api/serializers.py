@@ -11,13 +11,16 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
+    review = serializers.SlugRelatedField(
+        read_only=True, slug_field='text'
+    )
     author = serializers.SlugRelatedField(
         read_only=True, slug_field='username'
     )
 
     class Meta:
         model = Comment
-        fields = ('id', 'text', 'author', 'pub_date')
+        fields = ('id', 'text', 'author', 'pub_date', 'review')
 
 
 class GenreSerializer(serializers.ModelSerializer):
@@ -28,9 +31,17 @@ class GenreSerializer(serializers.ModelSerializer):
 
 class ReviewSerializer(serializers.ModelSerializer):
     # TODO: добавить проверку на неизменяемость произведения
+    title = serializers.SlugRelatedField(
+        read_only=True, slug_field='name'
+    )
     author = serializers.SlugRelatedField(
         read_only=True, slug_field='username'
     )
+
+    # def validate_score(self, value):
+    #     if 0 > value > 10:
+    #         raise serializers.ValidationError('Оценка от 0 до 10')
+    #     return value
 
     def validate(self, data):
         if self.context['request'].method != 'POST':
@@ -45,7 +56,8 @@ class ReviewSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Review
-        fields = ('id', 'text', 'author', 'score', 'rev_pub_date')
+        fields = ('id', 'text', 'author', 'score', 'pub_date', 'title')
+        # fields = ('id', 'text', 'author', 'score', 'rev_pub_date')
 
 
 class TitleSerializer(serializers.ModelSerializer):

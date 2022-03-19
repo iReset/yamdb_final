@@ -14,7 +14,7 @@ from rest_framework_simplejwt.tokens import AccessToken
 
 
 from .permissions import AdminOrReadOnly
-from reviews.models import Category, Comment, Genre, Review, Title, User
+from reviews.models import Category, Genre, Review, Title, User
 
 from .filters import TitleFilter
 from .mixins import CreateListDestroyViewSet
@@ -103,28 +103,28 @@ class GenreViewSet(CreateListDestroyViewSet):
 
 
 class CommentViewSet(viewsets.ModelViewSet):
-    queryset = Comment.objects.all()
+    # queryset = Comment.objects.all()
     serializer_class = CommentSerializer
-    permission_classes = [AuthorModeratorAdminOrReadOnly]
+    permission_classes = (AuthorModeratorAdminOrReadOnly,)
 
     def get_queryset(self):
         review = get_object_or_404(
             Review, id=self.kwargs['review_id'],
-            title__id=self.kwargs['title_id']
+            # title__id=self.kwargs['title_id']
         )
         return review.comments.all()
 
     def perform_create(self, serializer):
         review = get_object_or_404(
             Review, id=self.kwargs['review_id'],
-            title__id=self.kwargs['title_id']
+            # title__id=self.kwargs['title_id']
         )
         serializer.save(author=self.request.user, review=review)
 
 
 class ReviewViewSet(viewsets.ModelViewSet):
     serializer_class = ReviewSerializer
-    permission_classes = [AuthorModeratorAdminOrReadOnly]
+    permission_classes = (AuthorModeratorAdminOrReadOnly,)
 
     def get_queryset(self):
         title = get_object_or_404(Title, id=self.kwargs['title_id'])
