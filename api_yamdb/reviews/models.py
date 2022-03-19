@@ -152,7 +152,7 @@ class Title(models.Model):
     class Meta:
         verbose_name = 'Произведение'
         verbose_name_plural = 'Произведения'
-        ordering = ('name',)
+        # ordering = ('name',)
 
 
 class Review(models.Model):
@@ -180,13 +180,15 @@ class Review(models.Model):
             MaxValueValidator(10, 'От 1 до 10')
         ]
     )
-    rev_pub_date = models.DateTimeField(
+    # rev_pub_date = models.DateTimeField(
+    pub_date = models.DateTimeField(
         'Дата отзыва',
         auto_now_add=True
     )
 
     class Meta:
-        ordering = ('-rev_pub_date',)
+        # ordering = ('-rev_pub_date',)
+        ordering = ('-pub_date',)
         verbose_name = 'Отзыв'
         verbose_name_plural = 'Отзывы'
         constraints = [
@@ -213,17 +215,20 @@ class Comment(models.Model):
         related_name='comments',
         verbose_name='Автор комментария'
     )
-    text_comment = models.TextField(
+    # text_comment = models.TextField(
+    text = models.TextField(
         'Комментарий',
         help_text='Введите коментарий на отзыв'
     )
-    com_pub_date = models.DateTimeField(
+    # com_pub_date = models.DateTimeField(
+    pub_date = models.DateTimeField(
         'Дата комментария',
         auto_now_add=True
     )
 
     class Meta:
-        ordering = ('-com_pub_date',)
+        # ordering = ('-com_pub_date',)
+        ordering = ('-pub_date',)
         verbose_name = 'Комментарий'
         verbose_name_plural = 'Комментарии'
 
