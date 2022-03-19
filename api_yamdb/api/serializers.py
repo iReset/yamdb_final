@@ -146,5 +146,5 @@ class SingupSerializer(serializers.Serializer):
 
 
 class TokenSerializer(serializers.Serializer):
-    email = serializers.EmailField(required=True)
-    confirm_code = serializers.CharField(required=True)
+    username = serializers.CharField()
+    confirmation_code = serializers.CharField(required=True)
