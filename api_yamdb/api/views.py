@@ -80,7 +80,8 @@ class UserViewSet(viewsets.ModelViewSet):
     # FIXME: что-то тут не так. либо проверка идет по И, и тогда
     # IsAuthenticated лишний, либо проверка идет по ИЛИ, и тогда IsAdminUser
     # лишний.
-    permission_classes = [Admin]
+    lookup_field = "username"
+    permission_classes = (Admin,)
 
 
 class CategoryViewSet(CreateListDestroyViewSet):
@@ -136,7 +137,7 @@ class ReviewViewSet(viewsets.ModelViewSet):
 
 class TitleViewSet(viewsets.ModelViewSet):
     queryset = Title.objects.annotate(
-        rating=Avg('reviews__score')
+        Avg('reviews__score')
     )
     serializer_class = TitleSerializer
     filter_backends = (DjangoFilterBackend,)
