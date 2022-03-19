@@ -7,7 +7,7 @@ from django.core.mail import send_mail
 from django_filters.rest_framework import DjangoFilterBackend
 from django.shortcuts import get_object_or_404
 
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes, action
 from rest_framework import filters, viewsets, permissions, status
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import AccessToken
@@ -22,7 +22,8 @@ from .permissions import Admin, AdminOrReadOnly, AuthorModeratorAdminOrReadOnly
 from .serializers import (CategorySerializer, CommentSerializer,
                           GenreSerializer, GetTitleSerializer,
                           ReviewSerializer, TitleSerializer, UserSerializer,
-                          SingupSerializer, TokenSerializer)
+                          UserEditSerializer, SingupSerializer,
+                          TokenSerializer)
 
 
 @api_view(['POST'])
@@ -82,6 +83,29 @@ class UserViewSet(viewsets.ModelViewSet):
     # лишний.
     lookup_field = "username"
     permission_classes = (Admin,)
+
+    @action(
+        methods=['get', 'patch'],
+        detail=False,
+        url_path='me',
+        permission_classes=[permissions.IsAuthenticated],
+        serializer_class=UserEditSerializer,
+    )
+    def user_me(self, request):
+        user = request.user
+        if request.method == 'GET':
+            serializer = self.get_serializer(user)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        if request.method == 'PATCH':
+            serializer = self.get_serializer(
+                user,
+                data=request.data,
+                partial=True
+            )
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
 class CategoryViewSet(CreateListDestroyViewSet):
