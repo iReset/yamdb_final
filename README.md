@@ -3,54 +3,54 @@
 ***Проект api_yamdb собирает отзывы пользователей на произведения.***
 
 Произведения делятся на категории:
+
 - «Книги»
 - «Фильмы»
 - «Музыка».
 
 Благодарные или возмущённые пользователи оставляют к произведениям текстовые отзывы (Review) и ставят произведению оценку в диапазоне от одного до десяти (целое число); из пользовательских оценок формируется усреднённая оценка произведения — рейтинг (целое число). На одно произведение пользователь может оставить только один отзыв.
 
-
-### Как запустить проект api_yamdb:
+## Как запустить проект api_yamdb
 
 Клонировать репозиторий и перейти в него в командной строке:
 
-```
-git clone 
+```sh
+git clone
 ```
 
-```
+```sh
 cd api_yamdb
 ```
 
-Cоздать и активировать виртуальное окружение:
+Создать и активировать виртуальное окружение:
 
-```
+```sh
 python3 -m venv env
 ```
 
-```
+```sh
 source env/bin/activate
 ```
 
-```
+```sh
 python -m pip install --upgrade pip
 ```
 
 Установить зависимости из файла requirements.txt:
 
-```
+```sh
 pip install -r requirements.txt
 ```
 
 Скопировать файл с переменными окружения:
 
-```
+```sh
 cp .env.sample .env
 ```
 
 Сгенерировать секретный ключ:
 
-```
+```sh
 python -c 'from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())'
 ```
 
@@ -58,7 +58,7 @@ python -c 'from django.core.management.utils import get_random_secret_key; print
 
 Выполнить миграции:
 
-```
+```sh
 python manage.py migrate
 ```
 
@@ -70,6 +70,6 @@ python manage.py migrate
 
 Запустить проект:
 
-```
+```sh
 python manage.py runserver
 ```
