@@ -1,4 +1,3 @@
-# from django.shortcuts import get_object_or_404
 from django.conf import settings
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
@@ -117,21 +116,18 @@ class GenreViewSet(CreateListDestroyViewSet):
 
 
 class CommentViewSet(viewsets.ModelViewSet):
-    # queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     permission_classes = (AuthorModeratorAdminOrReadOnly,)
 
     def get_queryset(self):
         review = get_object_or_404(
             Review, id=self.kwargs['review_id'],
-            # title__id=self.kwargs['title_id']
         )
         return review.comments.all()
 
     def perform_create(self, serializer):
         review = get_object_or_404(
             Review, id=self.kwargs['review_id'],
-            # title__id=self.kwargs['title_id']
         )
         serializer.save(author=self.request.user, review=review)
 

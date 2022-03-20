@@ -38,11 +38,6 @@ class ReviewSerializer(serializers.ModelSerializer):
         read_only=True, slug_field='username'
     )
 
-    # def validate_score(self, value):
-    #     if 0 > value > 10:
-    #         raise serializers.ValidationError('Оценка от 0 до 10')
-    #     return value
-
     def validate(self, data):
         if self.context['request'].method != 'POST':
             return data
@@ -57,7 +52,6 @@ class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
         fields = ('id', 'text', 'author', 'score', 'pub_date', 'title')
-        # fields = ('id', 'text', 'author', 'score', 'rev_pub_date')
 
 
 class TitleSerializer(serializers.ModelSerializer):
@@ -76,7 +70,6 @@ class TitleSerializer(serializers.ModelSerializer):
         fields = (
             'id', 'name', 'year', 'category', 'genre', 'description', 'rating'
         )
-        # read_only_fields = ()
 
 
 class GetTitleSerializer(serializers.ModelSerializer):
@@ -92,7 +85,6 @@ class GetTitleSerializer(serializers.ModelSerializer):
         fields = (
             'id', 'name', 'year', 'category', 'genre', 'description', 'rating'
         )
-        # read_only_fields = ()
 
 
 class UserSerializer(serializers.ModelSerializer):
