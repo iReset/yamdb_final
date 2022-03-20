@@ -43,3 +43,4 @@ class Command(BaseCommand):
                 )
             self.stdout.write(
                 f'Данные для таблицы {model.__name__} успешно загружены')
+        return('База данных успешно загружена.')
