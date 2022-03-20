@@ -1,7 +1,10 @@
-from django.core.management.base import BaseCommand
 import csv
+
 from django.conf import settings
-from reviews.models import Genre, Category, User, Title
+from django.core.management.base import BaseCommand
+
+from reviews.models import Category, Genre, Title, User
+
 # from reviews.models import Comment, Review
 
 
