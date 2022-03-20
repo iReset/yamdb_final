@@ -67,9 +67,6 @@ def send_jwt_token(request):
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    # FIXME: что-то тут не так. либо проверка идет по И, и тогда
-    # IsAuthenticated лишний, либо проверка идет по ИЛИ, и тогда IsAdminUser
-    # лишний.
     lookup_field = "username"
     permission_classes = (Admin,)
 
