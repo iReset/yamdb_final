@@ -2,6 +2,8 @@ from django.contrib import admin
 
 from .models import Category, Comment, Genre, Review, Title, User
 
+EMPTY_VALUE = '-пусто-'
+
 
 class UserAdmin(admin.ModelAdmin):
     list_display = (
@@ -9,28 +11,28 @@ class UserAdmin(admin.ModelAdmin):
     )
     search_fields = ('username',)
     list_filter = ('username', 'role')
-    empty_value_display = '-пусто-'
+    empty_value_display = EMPTY_VALUE
 
 
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'slug')
     search_fields = ('name', 'slug')
     list_filter = ('name', 'slug')
-    empty_value_display = '-пусто-'
+    empty_value_display = EMPTY_VALUE
 
 
 class CommentAdmin(admin.ModelAdmin):
     list_display = ('id', 'review', 'author', 'text', 'pub_date')
     search_fields = ('author', 'text')
     list_filter = ('author', 'text')
-    empty_value_display = '-пусто-'
+    empty_value_display = EMPTY_VALUE
 
 
 class GenreAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'slug')
     search_fields = ('name', 'slug')
     list_filter = ('name', 'slug')
-    empty_value_display = '-пусто-'
+    empty_value_display = EMPTY_VALUE
 
 
 class ReviewAdmin(admin.ModelAdmin):
@@ -39,7 +41,7 @@ class ReviewAdmin(admin.ModelAdmin):
     )
     search_fields = ('author', 'title', 'pub_date')
     list_filter = ('author', 'title', 'pub_date')
-    empty_value_display = '-пусто-'
+    empty_value_display = EMPTY_VALUE
 
 
 class TitleAdmin(admin.ModelAdmin):
@@ -48,7 +50,7 @@ class TitleAdmin(admin.ModelAdmin):
     )
     search_fields = ('name', 'year', 'category', 'genre')
     list_filter = ('name', 'year', 'category', 'genre')
-    empty_value_display = '-пусто-'
+    empty_value_display = EMPTY_VALUE
 
 
 admin.site.register(User, UserAdmin)
