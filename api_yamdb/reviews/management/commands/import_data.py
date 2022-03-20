@@ -5,7 +5,6 @@ from django.core.management.base import BaseCommand
 
 from reviews.models import Category, Genre, Title, User
 
-
 Models = {
     User: 'users.csv',
     Category: 'category.csv',
