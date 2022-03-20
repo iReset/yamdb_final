@@ -114,7 +114,7 @@ class UserEditSerializer(serializers.ModelSerializer):
         read_only_fields = ('role',)
 
 
-class SingupSerializer(serializers.Serializer):
+class SignupSerializer(serializers.Serializer):
     username = serializers.CharField(
         validators=[
             UniqueValidator(queryset=User.objects.all())

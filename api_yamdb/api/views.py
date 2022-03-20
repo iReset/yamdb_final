@@ -14,7 +14,7 @@ from .mixins import CreateListDestroyViewSet
 from .permissions import Admin, AdminOrReadOnly, AuthorModeratorAdminOrReadOnly
 from .serializers import (CategorySerializer, CommentSerializer,
                           GenreSerializer, GetTitleSerializer,
-                          ReviewSerializer, SingupSerializer, TitleSerializer,
+                          ReviewSerializer, SignupSerializer, TitleSerializer,
                           TokenSerializer, UserEditSerializer, UserSerializer)
 from reviews.models import Category, Genre, Review, Title, User
 
@@ -22,7 +22,7 @@ from reviews.models import Category, Genre, Review, Title, User
 @api_view(['POST'])
 @permission_classes([permissions.AllowAny])
 def send_confirm_code(request):
-    serializer = SingupSerializer(data=request.data)
+    serializer = SignupSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     username = serializer.validated_data['username']
     email = serializer.validated_data['email']
