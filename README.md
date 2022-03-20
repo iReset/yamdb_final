@@ -42,6 +42,20 @@ python -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
+Скопировать файл с переменными окружения:
+
+```
+cp .env.sample .env
+```
+
+Сгенерировать секретный ключ:
+
+```
+python -c 'from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())'
+```
+
+и вставить выданное значение вместо значения параметра ``SECRET_KEY`` в файле ``.env``.
+
 Выполнить миграции:
 
 ```
