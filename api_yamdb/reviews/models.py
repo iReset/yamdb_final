@@ -94,7 +94,7 @@ class Category(models.Model):
 class Genre(models.Model):
     name = models.CharField(
         'Жанр',
-        max_length=100
+        max_length=256
     )
     slug = models.SlugField(
         'Ключ жанра',
@@ -113,7 +113,7 @@ class Genre(models.Model):
 class Title(models.Model):
     name = models.CharField(
         'Название произведения',
-        max_length=100
+        max_length=150
     )
     year = models.PositiveSmallIntegerField(
         'Год выпуска',
@@ -137,7 +137,6 @@ class Title(models.Model):
     )
     description = models.TextField(
         'Описание',
-        max_length=256,
         null=True,
         blank=True,
     )
