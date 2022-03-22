@@ -66,8 +66,8 @@ class User(AbstractUser):
 
         constraints = [
             models.CheckConstraint(
-                check=~models.Q(username__iexact="me"),
-                name="Использовать имя 'me' в качестве username запрещено"
+                check=~models.Q(username__iexact='me'),
+                name='Использовать имя "me" в качестве username запрещено'
             )
         ]
 

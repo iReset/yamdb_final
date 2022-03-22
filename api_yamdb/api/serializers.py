@@ -127,13 +127,13 @@ class SignupSerializer(serializers.Serializer):
     )
 
     def validate_username(self, value):
-        if value.lower() == "me":
+        if value.lower() == 'me':
             raise serializers.ValidationError(
-                "Использовать имя 'me' в качестве username запрещено")
+                'Использовать имя "me" в качестве username запрещено')
         return value
 
     class Meta:
-        fields = ("username", "email")
+        fields = ('username', 'email')
         model = User
 
 

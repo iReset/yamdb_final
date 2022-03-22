@@ -67,7 +67,7 @@ def send_jwt_token(request):
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    lookup_field = "username"
+    lookup_field = 'username'
     permission_classes = (Admin,)
 
     @action(
