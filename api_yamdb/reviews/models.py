@@ -85,12 +85,12 @@ class Category(models.Model):
         unique=True
     )
 
-    def __str__(self):
-        return f'{self.name} {self.slug}'
-
     class Meta:
         verbose_name = CATEGORY_NAME
         verbose_name_plural = 'Категории'
+
+    def __str__(self):
+        return f'{self.name} {self.slug}'
 
 
 class Genre(models.Model):
