@@ -74,7 +74,7 @@ python -c 'from django.core.management.utils import get_random_secret_key; print
 
 ```sh
 python api_yamdb/manage.py migrate
-python api_yamdb/manage.py import-data
+python api_yamdb/manage.py import_data
 ```
 
 ## Использование<div id="usage"></div>
