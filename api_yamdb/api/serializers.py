@@ -26,7 +26,7 @@ class CommentSerializer(serializers.ModelSerializer):
 class GenreSerializer(serializers.ModelSerializer):
     class Meta:
         model = Genre
-        fields = ('name', 'slug')
+        exclude = ('id',)
 
 
 class ReviewSerializer(serializers.ModelSerializer):
