@@ -27,7 +27,7 @@ def send_confirm_code(request):
     username = serializer.validated_data['username']
     email = serializer.validated_data['email']
     if not (User.objects.filter(username=username).exists()
-       and User.objects.filter(email=email).exists()):
+       or User.objects.filter(email=email).exists()):
         User.objects.create(
             username=username, email=email
         )
@@ -54,7 +54,7 @@ def send_jwt_token(request):
     confirm_code = serializer.validated_data['confirmation_code']
     user = get_object_or_404(User, username=username)
     if default_token_generator.check_token(user, confirm_code):
-        token = AccessToken.for_user(user).access_token
+        token = AccessToken.for_user(user)
         return Response(
             {'token': str(token)}, status=status.HTTP_200_OK
         )
