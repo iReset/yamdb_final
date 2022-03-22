@@ -17,8 +17,8 @@ router_v1.register(
 router_v1.register('users', UserViewSet)
 
 auth_patterns = [
-    path('signup/', send_confirm_code),
-    path('token/', send_jwt_token),
+    path('signup/', send_confirm_code, name='signup'),
+    path('token/', send_jwt_token, name='token'),
 ]
 urlpatterns = [
     path('v1/', include(router_v1.urls)),
