@@ -3,6 +3,8 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils import timezone
 
+CATEGORY_NAME = 'Категория'
+
 
 class User(AbstractUser):
     USER = 'user'
@@ -73,7 +75,7 @@ class User(AbstractUser):
 
 class Category(models.Model):
     name = models.CharField(
-        'Категория',
+        CATEGORY_NAME,
         max_length=256
     )
     slug = models.SlugField(
@@ -86,7 +88,7 @@ class Category(models.Model):
         return f'{self.name} {self.slug}'
 
     class Meta:
-        verbose_name = 'Категория'
+        verbose_name = CATEGORY_NAME
         verbose_name_plural = 'Категории'
 
 
@@ -123,7 +125,7 @@ class Title(models.Model):
     )
     category = models.ForeignKey(
         Category,
-        verbose_name='Категория',
+        verbose_name=CATEGORY_NAME,
         on_delete=models.SET_NULL,
         blank=True,
         null=True,
