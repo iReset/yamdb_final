@@ -1,7 +1,8 @@
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-from django.utils import timezone
+
+from api.validators import validate_year
 
 CATEGORY_NAME = 'Категория'
 
@@ -118,10 +119,7 @@ class Title(models.Model):
     )
     year = models.PositiveSmallIntegerField(
         'Год выпуска',
-        validators=[
-            MinValueValidator(1),
-            MaxValueValidator(timezone.now().year)
-        ]
+        validators=[validate_year],
     )
     category = models.ForeignKey(
         Category,
