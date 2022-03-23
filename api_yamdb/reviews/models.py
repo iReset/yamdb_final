@@ -104,12 +104,12 @@ class Genre(models.Model):
         unique=True
     )
 
-    def __str__(self):
-        return f'{self.name} {self.slug}'
-
     class Meta:
         verbose_name = 'Жанр'
         verbose_name_plural = 'Жанры'
+
+    def __str__(self):
+        return f'{self.name} {self.slug}'
 
 
 class Title(models.Model):
@@ -140,12 +140,12 @@ class Title(models.Model):
         blank=True,
     )
 
-    def __str__(self):
-        return f'{self.name}'
-
     class Meta:
         verbose_name = 'Произведение'
         verbose_name_plural = 'Произведения'
+
+    def __str__(self):
+        return f'{self.name}'
 
 
 class Review(models.Model):
