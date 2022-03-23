@@ -20,7 +20,8 @@ class User(AbstractUser):
     username = models.CharField(
         'username',
         max_length=150,
-        unique=True
+        unique=True,
+        db_index=True,
     )
     email = models.EmailField(
         'email',
@@ -41,7 +42,8 @@ class User(AbstractUser):
         'Роль',
         max_length=16,
         choices=USER_ROLE,
-        default=USER
+        default=USER,
+        db_index=True,
     )
     bio = models.TextField(
         'Биография',
@@ -77,7 +79,8 @@ class User(AbstractUser):
 class Category(models.Model):
     name = models.CharField(
         CATEGORY_NAME,
-        max_length=256
+        max_length=256,
+        db_index=True,
     )
     slug = models.SlugField(
         'Ключ категории',
@@ -96,7 +99,8 @@ class Category(models.Model):
 class Genre(models.Model):
     name = models.CharField(
         'Жанр',
-        max_length=256
+        max_length=256,
+        db_index=True,
     )
     slug = models.SlugField(
         'Ключ жанра',
@@ -115,7 +119,8 @@ class Genre(models.Model):
 class Title(models.Model):
     name = models.CharField(
         'Название произведения',
-        max_length=150
+        max_length=150,
+        db_index=True,
     )
     year = models.PositiveSmallIntegerField(
         'Год выпуска',
