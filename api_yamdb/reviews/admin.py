@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.db.models import Avg
 
 from .models import Category, Comment, Genre, Review, Title, User
 
@@ -51,6 +52,12 @@ class TitleAdmin(admin.ModelAdmin):
     search_fields = ('name', 'year', 'category', 'genre')
     list_filter = ('name', 'year', 'category', 'genre')
     empty_value_display = EMPTY_VALUE
+    readonly_fields = ('rating',)
+
+    def rating(self, instance):
+        return Review.objects.filter(title=instance).aggregate(Avg('score'))
+
+    rating.short_description = 'Рейтинг'
 
 
 admin.site.register(User, UserAdmin)
