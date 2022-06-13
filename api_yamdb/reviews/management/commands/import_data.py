@@ -33,7 +33,7 @@ class Command(BaseCommand):
 
         for model, csv_files in Models.items():
             with open(
-                f'{settings.STATICFILES_DIRS[0]}/data/{csv_files}',
+                f'{settings.STATIC_ROOT}/data/{csv_files}',
                 'r',
                 encoding='utf-8'
             ) as csv_file:
