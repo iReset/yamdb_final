@@ -9,6 +9,7 @@ services:
       - ./.env
 
   web:
+    image: ireset/yamdb_final:latest
     build: ../api_yamdb/
     restart: always
     volumes:
