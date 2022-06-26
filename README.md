@@ -1,5 +1,11 @@
 # Проект API YaMDb
 
+<p align="center">
+
+![AutoDeploy](https://github.com/iReset/yamdb_final/actions/workflows/yamdb_workflow.yml/badge.svg)
+
+</p>
+
 ---
 
 ***Проект API YaMDb реализует API для сбора отзывов пользователей на произведения.***
